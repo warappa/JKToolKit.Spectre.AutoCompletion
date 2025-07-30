@@ -48,22 +48,22 @@ foreach ($version in $SpectreVersions) {
     
     # Remove existing packages
     Write-Host "Removing existing Spectre packages..." -ForegroundColor Yellow
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing
+    #dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console
+    #dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli
+    #dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing
 
     # Add packages with specific version
     Write-Host "Installing Spectre packages version $version..." -ForegroundColor Yellow
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console --version $version
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli --version $version
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing --version $version
+    #dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console --version $version
+    #dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli --version $version
+    #dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing --version $version
 
     # Restore, build, and test
     Write-Host "Restoring packages..." -ForegroundColor Yellow
-    dotnet restore CiFilter.slnf
+    dotnet restore CiFilter.slnf /p:SpectreConsoleVersion=$version
 
     Write-Host "Building solution..." -ForegroundColor Yellow
-    dotnet build CiFilter.slnf --no-restore
+    dotnet build CiFilter.slnf --no-restore /p:SpectreConsoleVersion=$version
 
     Write-Host "Running tests..." -ForegroundColor Yellow
     dotnet test CiFilter.slnf --no-build
@@ -77,3 +77,4 @@ foreach ($version in $SpectreVersions) {
 }
 
 Write-Host "`nTesting completed for all versions." -ForegroundColor Cyan
+Set-Location "..\"

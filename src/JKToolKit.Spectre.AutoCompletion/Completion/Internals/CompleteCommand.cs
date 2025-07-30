@@ -13,10 +13,7 @@ using System.Reflection;
 using System.Text;
 using JKToolKit.Spectre.AutoCompletion.Attributes;
 
-#if NET8_0_OR_GREATER
 using System.Text.Json;
-#endif
-
 
 namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
 
@@ -41,11 +38,7 @@ public sealed class CompleteCommandSettings : CommandSettings
 
     public override ValidationResult Validate()
     {
-#if NET5_0_OR_GREATER
         var allowedFormats = new[] { "plain", "json", };
-#else
-        var allowedFormats = new[] { "plain", };
-#endif
         if (!allowedFormats.Contains(Format, StringComparer.OrdinalIgnoreCase))
         {
             return ValidationResult.Error($"Invalid format '{Format}'");
@@ -152,17 +145,21 @@ public sealed partial class CompleteCommand : AsyncCommand<CompleteCommandSettin
 
     private void RenderCompletion(CompletionResultItem[] completions, CompleteCommandSettings settings)
     {
-#if NET5_0_OR_GREATER
+#if SPECTRE_45_OR_NEWER
 
-        File.AppendAllText("completion.log.jsonl", JsonSerializer.Serialize(new
-        {
-            Settings = settings,
-            Completions = completions
-        }) + "\n");
+        //File.AppendAllText("completion.log.jsonl", JsonSerializer.Serialize(new
+        //{
+        //    Settings = settings,
+        //    Completions = completions
+        //}) + "\n");
 
         if (string.Equals(settings.Format, "json", StringComparison.OrdinalIgnoreCase))
         {
+#if SPECTRE_46_OR_NEWER
             _writer.Write(JsonSingleLineRenderable.Create(completions));
+#else
+            _writer.Write(JsonSerializer.Serialize(completions));
+#endif
             _writer.WriteLine(string.Empty, Style.Plain);
         }
         else

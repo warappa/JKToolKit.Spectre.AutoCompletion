@@ -203,7 +203,7 @@ internal class CommandCompletionContextParser
         // 0.46.1-preview.0.19
         // 0.46.1-preview.0.20
 
-#if SPECTRE_45_OR_NEWER
+#if !SPECTRE_45_OR_NEWER
         return new CommandTreeParser
         (
             _model,

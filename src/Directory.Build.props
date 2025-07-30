@@ -14,6 +14,13 @@
 
 		<SpectreConsoleVersionWithoutSuffix>$([System.Text.RegularExpressions.Regex]::Replace('$(SpectreConsoleVersion)', '-.*$', ''))</SpectreConsoleVersionWithoutSuffix>
 		<SanatizedSpectreConsoleVersion>$([System.String]::new('$(SpectreConsoleVersion)').Replace('.', '_').Replace('-', '_'))</SanatizedSpectreConsoleVersion>
+
+		<SpectreConsoleTestVersion Condition=" '$(SpectreConsoleTestVersion)' == '' ">
+			$([System.String]::new($(SpectreConsoleVersionWithoutSuffix)).SubString(0, 4))
+		</SpectreConsoleTestVersion>
+		<!--<SpectreConsoleTestVersion Condition=" '$(SpectreConsoleTestVersion)' == '' ">
+			$(SpectreConsoleVersionWithoutSuffix)
+		</SpectreConsoleTestVersion>-->
 	</PropertyGroup>
 
 	<PropertyGroup>

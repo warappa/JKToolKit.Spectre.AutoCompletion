@@ -1,9 +1,12 @@
-#if NET5_0_OR_GREATER
+#if !SPECTRE_45_OR_NEWER
 
-using Spectre.Console.Rendering;
-using System.Text.Json;
+using RenderOptions = Spectre.Console.Rendering.RenderContext;
 
 #endif
+
+using Spectre.Console.Rendering;
+
+using System.Text.Json;
 
 namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
 
@@ -51,7 +54,7 @@ public partial class CompleteCommand
     {
         var result = new TabCompletionArgs(line);
 
-#if NET5_0_OR_GREATER
+#if SPECTRE_45_OR_NEWER
         // When starts with { and ends with }, it's a json object
         var normalizedLine = line.Trim(' ', '\t', '\r', '\n');
         var couldBeJson = normalizedLine.StartsWith("{") && normalizedLine.EndsWith("}");
@@ -78,7 +81,7 @@ public partial class CompleteCommand
         return result;
     }
 
-#if NET5_0_OR_GREATER
+#if SPECTRE_45_OR_NEWER
 
     private class JsonSingleLineRenderable<T> : IRenderable
     {

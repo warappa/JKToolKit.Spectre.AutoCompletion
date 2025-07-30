@@ -3,11 +3,8 @@
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
 		<!-- greater or equal to 0.50? -->
-		<IsNetStandardCompatible
-			Condition="$([System.Version]::Parse('$(SpectreConsoleVersionWithoutSuffix)').CompareTo($([System.Version]::Parse('0.50')))) &gt;= 0">true</IsNetStandardCompatible>
-		<TargetFrameworks
-			Condition=" '$(IsNetStandardCompatible)' == 'True'"
-			>$(TargetFrameworks);net48</TargetFrameworks>
+		<IsNetStandardCompatible Condition="$([System.Version]::Parse('$(SpectreConsoleVersionWithoutSuffix)').CompareTo($([System.Version]::Parse('0.50')))) &gt;= 0">true</IsNetStandardCompatible>
+		<TargetFrameworks Condition=" '$(IsNetStandardCompatible)' == 'True'">$(TargetFrameworks);net48</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
@@ -31,12 +28,12 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+	
 	<ItemGroup>
-		<PackageReference Include="Spectre.Verify.Extensions" />
-		
 		<PackageReference Include="Spectre.Console" />
 		<PackageReference Include="Spectre.Console.Cli" />
 		<PackageReference Include="Spectre.Console.Testing" />
+		<PackageReference Include="Spectre.Verify.Extensions" />
 	</ItemGroup>
 
 	<ItemGroup>
