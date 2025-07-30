@@ -2,28 +2,31 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<LangVersion>10.0</LangVersion>
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		
 		<Version>0.0.12</Version>
 		<PackageReleaseNotes>
 			Fixing potential encoding issues
 		</PackageReleaseNotes>
-
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Spectre.Console" Version="0.49.2-preview.0.1" />
-		<PackageReference Include="Spectre.Console.Cli" Version="0.49.2-preview.0.1" />
+		<PackageReference Include="Polyfill">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Spectre.Console" />
+		<PackageReference Include="Spectre.Console.Cli" />
 	</ItemGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<InternalsAssemblyName Include="Spectre.Console" />
 		<InternalsAssemblyName Include="Spectre.Console.Cli" />
 
 
-		<PackageReference Include="IgnoresAccessChecksToGenerator" Version="0.6.0" PrivateAssets="All" />
+		<PackageReference Include="IgnoresAccessChecksToGenerator" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">

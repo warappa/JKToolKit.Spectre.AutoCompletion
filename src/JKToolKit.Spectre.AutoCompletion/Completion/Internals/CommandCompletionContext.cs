@@ -203,10 +203,7 @@ internal class CommandCompletionContextParser
         // 0.46.1-preview.0.19
         // 0.46.1-preview.0.20
 
-        const string SpecialVersion1 = "0.46.1-preview.0.20";
-        const string SpecialVersion2 = "0.46.1-preview.0.19";
-
-#if SPECTRE_47_OR_NEWER || SpectreConsoleVersion == SpecialVersion1 || SpectreConsoleVersion == SpecialVersion2
+#if SPECTRE_45_OR_NEWER
         return new CommandTreeParser
         (
             _model,

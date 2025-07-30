@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<!-- greater or equal to 0.50? -->
+		<IsNetStandardCompatible
+			Condition="$([System.Version]::Parse('$(SpectreConsoleVersionWithoutSuffix)').CompareTo($([System.Version]::Parse('0.50')))) &gt;= 0">true</IsNetStandardCompatible>
+		<TargetFrameworks
+			Condition=" '$(IsNetStandardCompatible)' == 'True'"
+			>$(TargetFrameworks);net48</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
@@ -9,25 +15,28 @@
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="IsExternalInit" Version="1.0.2" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" Version="1.1.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.XUnit" Version="1.1.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.6.1" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-		<PackageReference Include="Shouldly" Version="4.1.0" />
-		<PackageReference Include="xunit" Version="2.4.2" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.XUnit" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Polyfill">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Shouldly" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.runner.visualstudio">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Spectre.Verify.Extensions" Version="18.0.0" />
+		<PackageReference Include="Spectre.Verify.Extensions" />
 		
-		<PackageReference Include="Spectre.Console" Version="0.49.2-preview.0.1" />
-		<PackageReference Include="Spectre.Console.Cli" Version="0.49.2-preview.0.1" />
-		<PackageReference Include="Spectre.Console.Testing" Version="0.49.2-preview.0.1" />
+		<PackageReference Include="Spectre.Console" />
+		<PackageReference Include="Spectre.Console.Cli" />
+		<PackageReference Include="Spectre.Console.Testing" />
 	</ItemGroup>
 
 	<ItemGroup>
