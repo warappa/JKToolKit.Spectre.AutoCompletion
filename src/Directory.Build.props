@@ -1,0 +1,41 @@
+<Project>
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<SpectreConsoleVersion Condition=" '$(SpectreConsoleVersion)' == '' ">0.46.1-preview.0.19</SpectreConsoleVersion>
+		<!--<SpectreConsoleVersion>0.49.0</SpectreConsoleVersion>
+		<SpectreConsoleVersion>0.50.0</SpectreConsoleVersion>-->
+
+		<SpectreConsoleVersionWithoutSuffix>$([System.Text.RegularExpressions.Regex]::Replace('$(SpectreConsoleVersion)', '-.*$', ''))</SpectreConsoleVersionWithoutSuffix>
+		<SanatizedSpectreConsoleVersion>$([System.String]::new('$(SpectreConsoleVersion)').Replace('.', '_').Replace('-', '_'))</SanatizedSpectreConsoleVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.45.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_45_OR_NEWER;$(DefineConstants)</DefineConstants>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.46.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_46_OR_NEWER;$(DefineConstants)</DefineConstants>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.47.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_47_OR_NEWER;$(DefineConstants)</DefineConstants>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.48.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_48_OR_NEWER;$(DefineConstants)</DefineConstants>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.49.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_49_OR_NEWER;$(DefineConstants)</DefineConstants>
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.50.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_50_OR_NEWER;$(DefineConstants)</DefineConstants>
+
+		<DefineConstants>SPECTRE_$(SanatizedSpectreConsoleVersion);$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+</Project>
