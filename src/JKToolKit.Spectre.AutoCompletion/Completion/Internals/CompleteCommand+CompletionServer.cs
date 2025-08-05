@@ -1,4 +1,4 @@
-#if !SPECTRE_45_OR_NEWER
+#if !SPECTRE_46_OR_NEWER
 
 using RenderOptions = Spectre.Console.Rendering.RenderContext;
 

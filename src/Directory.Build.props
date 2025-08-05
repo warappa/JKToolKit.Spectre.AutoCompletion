@@ -42,6 +42,10 @@
 		<DefineConstants
 			Condition="$([System.Version]::Parse('0.50.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
 			>SPECTRE_50_OR_NEWER;$(DefineConstants)</DefineConstants>
+		
+		<DefineConstants
+			Condition="$([System.Version]::Parse('0.51.0').CompareTo($([System.Version]::Parse($(SpectreConsoleVersionWithoutSuffix))))) &lt;= 0"
+			>SPECTRE_51_OR_NEWER;$(DefineConstants)</DefineConstants>
 
 		<DefineConstants>SPECTRE_$(SanatizedSpectreConsoleVersion);$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

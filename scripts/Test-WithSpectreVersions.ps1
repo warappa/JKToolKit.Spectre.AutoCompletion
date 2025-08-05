@@ -66,7 +66,7 @@ foreach ($version in $SpectreVersions) {
     dotnet build CiFilter.slnf --no-restore /p:SpectreConsoleVersion=$version
 
     Write-Host "Running tests..." -ForegroundColor Yellow
-    dotnet test CiFilter.slnf --no-build
+    dotnet test CiFilter.slnf --no-build /p:SpectreConsoleVersion=$version
     
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Tests failed with version $version" -ForegroundColor Red
