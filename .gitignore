@@ -368,3 +368,4 @@ appsettings.Development.json
 build/.bin/
 
 src/.idea/
+scripts/test-results.txt

@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using JKToolKit.Spectre.AutoCompletion.Attributes;
 
-#if NET8_0_OR_GREATER
+#if SPECTRE_45_OR_NEWER
 using System.Text.Json;
 #endif
 
@@ -152,7 +152,7 @@ public sealed partial class CompleteCommand : AsyncCommand<CompleteCommandSettin
 
     private void RenderCompletion(CompletionResultItem[] completions, CompleteCommandSettings settings)
     {
-#if NET5_0_OR_GREATER
+#if SPECTRE_45_OR_NEWER
 
         File.AppendAllText("completion.log.jsonl", JsonSerializer.Serialize(new
         {

@@ -2,13 +2,10 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<!-- greater or equal to 0.50? -->
-		<IsNetStandardCompatible
-			Condition="$([System.Version]::Parse('$(SpectreConsoleVersionWithoutSuffix)').CompareTo($([System.Version]::Parse('0.50')))) &gt;= 0">true</IsNetStandardCompatible>
-		<TargetFrameworks
-			Condition=" '$(IsNetStandardCompatible)' == 'True'"
-			>$(TargetFrameworks);net48</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(IsNetStandardCompatible)' == 'True'">$(TargetFrameworks);net48</TargetFrameworks>
+		
 		<ImplicitUsings>enable</ImplicitUsings>
+		<AssetTargetFallback>netstandard2.0</AssetTargetFallback>
 		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
