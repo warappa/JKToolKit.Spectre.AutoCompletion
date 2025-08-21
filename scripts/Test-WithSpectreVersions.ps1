@@ -2,20 +2,19 @@
 # Test-WithSpectreVersions.ps1
 
 param(
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string[]]$SpectreVersions,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [switch]$UseVersionsFromJson
 )
 
 # Working directory - adjust if needed
 $workingDirectory = ".\src"
 Set-Location $workingDirectory
-
 # If no versions specified and -UseVersionsFromJson is set, read from JSON
 if ($UseVersionsFromJson -and !$SpectreVersions) {
-    $jsonPath = ".\..\\.github\package-versions\spectre-console-cli-versions.json"
+    $jsonPath = ".\..\.github\package-versions\spectre-console-cli-versions.json"
     
     if (Test-Path $jsonPath) {
         $versionData = Get-Content $jsonPath | ConvertFrom-Json
@@ -40,40 +39,57 @@ $SpectreVersions | ForEach-Object { Write-Host "- $_" -ForegroundColor Cyan }
 Write-Host "`nCleaning solution..." -ForegroundColor Yellow
 dotnet clean CiFilter.slnf
 
+# Remove Test-Results.txt
+$testResultsFilepath = "$PSScriptRoot\test-results.txt"
+Remove-Item -Path $testResultsFilepath -ErrorAction SilentlyContinue
+
+"Test run started: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")" | Add-Content -Path $testResultsFilepath
+"`nVersions to test:" | Add-Content -Path $testResultsFilepath
+$SpectreVersions | ForEach-Object { "    $_" } | Add-Content -Path $testResultsFilepath
+
+"" | Add-Content -Path $testResultsFilepath
+
 # For each version, run the tests
 foreach ($version in $SpectreVersions) {
     Write-Host "`n====================================================" -ForegroundColor Green
     Write-Host "Testing with Spectre.Console.Cli version: $version" -ForegroundColor Green
     Write-Host "====================================================" -ForegroundColor Green
     
-    # Remove existing packages
-    Write-Host "Removing existing Spectre packages..." -ForegroundColor Yellow
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli
-    dotnet remove ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing
-
-    # Add packages with specific version
-    Write-Host "Installing Spectre packages version $version..." -ForegroundColor Yellow
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console --version $version
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Cli --version $version
-    dotnet add ./JKToolKit.Spectre.AutoCompletion.Tests/JKToolKit.Spectre.AutoCompletion.Tests.csproj package Spectre.Console.Testing --version $version
-
     # Restore, build, and test
     Write-Host "Restoring packages..." -ForegroundColor Yellow
-    dotnet restore CiFilter.slnf
+    dotnet restore CiFilter.slnf /p:SpectreConsoleVersion=$version
 
-    Write-Host "Building solution..." -ForegroundColor Yellow
-    dotnet build CiFilter.slnf --no-restore
-
-    Write-Host "Running tests..." -ForegroundColor Yellow
-    dotnet test CiFilter.slnf --no-build
-    
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Tests failed with version $version" -ForegroundColor Red
+        Write-Host "Restore failed for version $version" -ForegroundColor Red
+        "[Failed]    [Restore] $version" | Add-Content -Path $testResultsFilepath
     }
     else {
-        Write-Host "Tests passed with version $version" -ForegroundColor Green
+        Write-Host "Building solution..." -ForegroundColor Yellow
+        dotnet build CiFilter.slnf --no-restore /p:SpectreConsoleVersion=$version /t:Rebuild
+
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Build failed for version $version" -ForegroundColor Red
+            "[Failed]    [Build]   $version" | Add-Content -Path $testResultsFilepath
+        }
+        else {
+            Write-Host "Running tests..." -ForegroundColor Yellow
+            dotnet test CiFilter.slnf --no-build /p:SpectreConsoleVersion=$version
+    
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "Tests failed for version $version" -ForegroundColor Red
+                "[Failed]    [Tests]   $version" | Add-Content -Path $testResultsFilepath
+            }
+            else {
+                Write-Host "Tests passed for version $version" -ForegroundColor Green
+                "[Succeeded] [Tests]   $version" | Add-Content -Path $testResultsFilepath
+            }
+        }
     }
 }
 
+Set-Location $PSScriptRoot
+
 Write-Host "`nTesting completed for all versions." -ForegroundColor Cyan
+
+Write-Host "`nTest results can be found in: " -NoNewline
+Write-Host ".\$([System.IO.Path]::GetFileName($testResultsFilepath))`n" -ForegroundColor Cyan
