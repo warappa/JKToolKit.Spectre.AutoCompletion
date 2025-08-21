@@ -85,6 +85,8 @@ foreach ($version in $SpectreVersions) {
             }
         }
     }
+
+    Start-Sleep 0.5
 }
 
 Set-Location $PSScriptRoot
